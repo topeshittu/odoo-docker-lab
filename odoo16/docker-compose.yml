@@ -1,0 +1,31 @@
+name: odoo16
+
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: odoo
+      POSTGRES_DB: postgres
+    volumes:
+      - odoo-16-db-data:/var/lib/postgresql/data
+
+  odoo:
+    image: odoo:16.0
+    restart: always
+    depends_on:
+      - db
+    environment:
+      HOST: db
+      USER: odoo
+      PASSWORD: odoo
+    ports:
+      - "8069:8069"
+    volumes:
+      - odoo-16-web-data:/var/lib/odoo
+      - ./custom_addons:/mnt/extra-addons
+
+volumes:
+  odoo-16-db-data:
+  odoo-16-web-data:
